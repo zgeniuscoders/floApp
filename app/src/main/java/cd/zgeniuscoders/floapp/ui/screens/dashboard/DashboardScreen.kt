@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.floapp.ui.screens
+package cd.zgeniuscoders.floapp.ui.screens.dashboard
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,17 +13,35 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import cd.zgeniuscoders.floapp.ui.navigation.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(navController: NavController) {
+
+    val vm = hiltViewModel<DashboardViewModel>()
+    val state = vm.state
+    val onEvent = vm::onTriggerEvent
+
+    LaunchedEffect(true) {
+        onEvent(DashboardEvent.OnLoadData)
+    }
+
+    DashboardBody(navController, state, onEvent)
+}
+
+@Composable
+fun DashboardBody(
+    navController: NavController,
+    state: DashboardState,
+    onEvent: (event: DashboardEvent) -> Unit
+) {
     val pendingPayments = listOf(
         PendingPayment("Frais d'inscription", "150 000 FCFA", "15 Jan 2024"),
         PendingPayment("Frais de bibliothèque", "25 000 FCFA", "20 Jan 2024")
     )
-    
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +60,7 @@ fun DashboardScreen(navController: NavController) {
                     modifier = Modifier.padding(20.dp)
                 ) {
                     Text(
-                        text = "Bonjour, Jean Dupont",
+                        text = "Bonjour, ${state.user?.username}",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -55,7 +73,7 @@ fun DashboardScreen(navController: NavController) {
                 }
             }
         }
-        
+
         item {
             // Statistiques rapides
             Row(
@@ -76,7 +94,7 @@ fun DashboardScreen(navController: NavController) {
                 )
             }
         }
-        
+
         item {
             Text(
                 text = "Paiements en attente",
@@ -85,14 +103,14 @@ fun DashboardScreen(navController: NavController) {
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
-        
+
         items(pendingPayments) { payment ->
             PendingPaymentCard(
                 payment = payment,
                 onPayClick = { navController.navigate(Screen.PaymentDetails.route) }
             )
         }
-        
+
         item {
             // Actions rapides
             Text(
@@ -101,7 +119,7 @@ fun DashboardScreen(navController: NavController) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

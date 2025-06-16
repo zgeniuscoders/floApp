@@ -11,7 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.floapp.ui.navigation.BottomNavigationBar
 import cd.zgeniuscoders.floapp.ui.navigation.Screen
-import cd.zgeniuscoders.floapp.ui.screens.DashboardScreen
+import cd.zgeniuscoders.floapp.ui.screens.dashboard.DashboardScreen
 import cd.zgeniuscoders.floapp.ui.screens.HistoryScreen
 import cd.zgeniuscoders.floapp.ui.screens.login.LoginScreen
 import cd.zgeniuscoders.floapp.ui.screens.PaymentDetailsScreen
@@ -22,7 +22,7 @@ import cd.zgeniuscoders.floapp.ui.screens.ProfileScreen
 @Composable
 fun AcademicPaymentApp() {
     val navController = rememberNavController()
-    var isLoggedIn by remember { mutableStateOf(false) }
+    var isLoggedIn by remember { mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     if (!isLoggedIn) {
