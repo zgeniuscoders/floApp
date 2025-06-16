@@ -3,6 +3,7 @@ package cd.zgeniuscoders.floapp.di
 import android.app.Application
 import android.content.Context
 import cd.zgeniuscoders.floapp.remote.AuthenticationService
+import cd.zgeniuscoders.floapp.remote.UserService
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -28,9 +29,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCategoryRepository(db: FirebaseFirestore): AuthenticationService {
+    fun provideAuthenticationService(): AuthenticationService {
         return AuthenticationService()
     }
 
+    @Provides
+    @Singleton
+    fun provideUserService(db: FirebaseFirestore): UserService {
+        return UserService(db)
+    }
 
 }
