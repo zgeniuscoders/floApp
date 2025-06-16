@@ -17,6 +17,10 @@ class AuthenticationService {
 
     private var auth = Firebase.auth
 
+    fun getCurrentUserUuid(): String? {
+        return auth.currentUser?.uid
+    }
+
     fun login(data: Login): Flow<Response<String>> = callbackFlow {
         auth.signInWithEmailAndPassword(data.email, data.password)
             .addOnCompleteListener { task ->
