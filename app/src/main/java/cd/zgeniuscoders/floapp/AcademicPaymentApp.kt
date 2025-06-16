@@ -13,7 +13,7 @@ import cd.zgeniuscoders.floapp.ui.navigation.BottomNavigationBar
 import cd.zgeniuscoders.floapp.ui.navigation.Screen
 import cd.zgeniuscoders.floapp.ui.screens.DashboardScreen
 import cd.zgeniuscoders.floapp.ui.screens.HistoryScreen
-import cd.zgeniuscoders.floapp.ui.screens.LoginScreen
+import cd.zgeniuscoders.floapp.ui.screens.login.LoginScreen
 import cd.zgeniuscoders.floapp.ui.screens.PaymentDetailsScreen
 import cd.zgeniuscoders.floapp.ui.screens.PaymentsScreen
 import cd.zgeniuscoders.floapp.ui.screens.ProfileScreen
@@ -22,10 +22,11 @@ import cd.zgeniuscoders.floapp.ui.screens.ProfileScreen
 @Composable
 fun AcademicPaymentApp() {
     val navController = rememberNavController()
-    var isLoggedIn by remember { mutableStateOf(true) }
-    
+    var isLoggedIn by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     if (!isLoggedIn) {
-        LoginScreen(onLoginSuccess = { isLoggedIn = true })
+        LoginScreen(onLoginSuccess = { isLoggedIn = true }, snackbarHostState)
     } else {
         MainAppContent(navController = navController)
     }
@@ -36,7 +37,7 @@ fun AcademicPaymentApp() {
 fun MainAppContent(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
