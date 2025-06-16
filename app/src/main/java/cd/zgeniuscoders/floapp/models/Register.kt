@@ -1,4 +1,7 @@
 package cd.zgeniuscoders.floapp.models
 
-class Register {
-}
+data class Register(
+    var email: String,
+    var username: String,
+    var password: String
+)
