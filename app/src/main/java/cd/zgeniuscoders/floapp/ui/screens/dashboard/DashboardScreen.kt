@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.floapp.ui.screens.dashboard
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,7 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import cd.zgeniuscoders.floapp.models.PendingPayment
 import cd.zgeniuscoders.floapp.ui.navigation.Screen
+import cd.zgeniuscoders.floapp.ui.screens.dashboard.components.PendingPaymentCard
+import cd.zgeniuscoders.floapp.ui.screens.dashboard.components.QuickActionCard
 
 @Composable
 fun DashboardScreen(navController: NavController) {
@@ -37,10 +41,7 @@ fun DashboardBody(
     state: DashboardState,
     onEvent: (event: DashboardEvent) -> Unit
 ) {
-    val pendingPayments = listOf(
-        PendingPayment("Frais d'inscription", "150 000 FCFA", "15 Jan 2024"),
-        PendingPayment("Frais de bibliothèque", "25 000 FCFA", "20 Jan 2024")
-    )
+    val pendingPayments = state.pendingPayments
 
     LazyColumn(
         modifier = Modifier
@@ -107,7 +108,9 @@ fun DashboardBody(
         items(pendingPayments) { payment ->
             PendingPaymentCard(
                 payment = payment,
-                onPayClick = { navController.navigate(Screen.PaymentDetails.route) }
+                onPayClick = {
+                    navController.navigate(Screen.PaymentDetails(paymentId = payment.id))
+                }
             )
         }
 
@@ -127,7 +130,7 @@ fun DashboardBody(
                 QuickActionCard(
                     title = "Historique",
                     icon = Icons.Default.History,
-                    onClick = { navController.navigate(Screen.History.route) },
+                    onClick = { navController.navigate(Screen.History) },
                     modifier = Modifier.weight(1f)
                 )
                 QuickActionCard(
@@ -177,86 +180,6 @@ fun StatCard(
     }
 }
 
-@Composable
-fun PendingPaymentCard(
-    payment: PendingPayment,
-    onPayClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = payment.title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = payment.amount,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Échéance: ${payment.dueDate}",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Button(
-                    onClick = onPayClick,
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text("Payer")
-                }
-            }
-        }
-    }
-}
 
-@Composable
-fun QuickActionCard(
-    title: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        onClick = onClick,
-        modifier = modifier,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
 
-data class PendingPayment(
-    val title: String,
-    val amount: String,
-    val dueDate: String
-)
+
