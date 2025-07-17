@@ -91,7 +91,7 @@ fun PaymentDetailsBody(
             }
         }
 
-        if(payment?.isPaid != null && !payment.isPaid){
+        if (payment?.paid != null && !payment.paid) {
             // Méthodes de paiement
             Text(
                 text = "Méthode de paiement",
@@ -156,8 +156,7 @@ fun PaymentDetailsBody(
             // Bouton de paiement
             Button(
                 onClick = {
-                    isProcessing = true
-                    // Simulation du processus de paiement
+                    onEvent(PaymentDetailsEvent.OnProcessCheckout)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,7 +174,7 @@ fun PaymentDetailsBody(
                 } else {
                     Icon(Icons.Default.Payment, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Payer 150 000 FCFA", fontSize = 16.sp)
+                    Text("Payer ${payment.amount} $", fontSize = 16.sp)
                 }
             }
         }

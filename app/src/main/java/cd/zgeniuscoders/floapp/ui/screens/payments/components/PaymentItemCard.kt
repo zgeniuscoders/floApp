@@ -55,13 +55,13 @@ fun PaymentItemCard(
                         text = "${payment.amount} $",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (payment.isPaid)
+                        color = if (payment.paid)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.error
                     )
                     Text(
-                        text = if (payment.isPaid) "Payé le ${payment.dueDate}" else "Échéance: ${payment.dueDate}",
+                        text = if (payment.paid) "Payé le ${payment.dueDate}" else "Échéance: ${payment.dueDate}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -70,7 +70,7 @@ fun PaymentItemCard(
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
-                    if (payment.isPaid) {
+                    if (payment.paid) {
                         Surface(
                             color = MaterialTheme.colorScheme.primaryContainer,
                             shape = MaterialTheme.shapes.small
@@ -120,7 +120,7 @@ fun PaymentItemCard(
                 }
             }
 
-            if (!payment.isPaid) {
+            if (!payment.paid) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
                     onClick = onPayClick,

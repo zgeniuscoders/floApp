@@ -80,7 +80,7 @@ class PaymentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, isProcessing = true) }
             if (state.value.payment != null) {
-                val payment = state.value.payment?.copy(isPaid = true)
+                val payment = state.value.payment?.copy(paid = true)
                 val currentUserUuid = authenticationService.getCurrentUserUuid()
 
                 pendingPaymentService

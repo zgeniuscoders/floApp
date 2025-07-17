@@ -6,6 +6,6 @@ data class PendingPayment(
     val amount: Int = 0,
     val dueDate: String = "",
 
-    val isPaid: Boolean = false,
+    val paid: Boolean = false,
     val isOverdue: Boolean = false
 )
