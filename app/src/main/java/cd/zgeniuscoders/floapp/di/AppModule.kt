@@ -3,6 +3,8 @@ package cd.zgeniuscoders.floapp.di
 import android.app.Application
 import android.content.Context
 import cd.zgeniuscoders.floapp.remote.AuthenticationService
+import cd.zgeniuscoders.floapp.remote.FeesService
+import cd.zgeniuscoders.floapp.remote.PendingPaimentService
 import cd.zgeniuscoders.floapp.remote.UserService
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -37,6 +39,19 @@ object AppModule {
     @Singleton
     fun provideUserService(db: FirebaseFirestore): UserService {
         return UserService(db)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeesService(db: FirebaseFirestore): FeesService {
+        return FeesService(db)
+    }
+
+
+    @Provides
+    @Singleton
+    fun providePendingPaymentService(db: FirebaseFirestore): PendingPaimentService {
+        return PendingPaimentService(db)
     }
 
 }
