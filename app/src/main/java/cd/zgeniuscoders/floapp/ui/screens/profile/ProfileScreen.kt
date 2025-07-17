@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.floapp.ui.screens
+package cd.zgeniuscoders.floapp.ui.screens.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,9 +11,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import cd.zgeniuscoders.floapp.ui.screens.profile.components.ProfileSection
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(modifier: Modifier = Modifier) {
+    val vm = hiltViewModel<ProfileViewModel>()
+    val state = vm.state
+
+    ProfileBody(state)
+}
+
+@Composable
+fun ProfileBody(state: ProfileState) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -25,7 +35,7 @@ fun ProfileScreen() {
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-        
+
         // Informations personnelles
         Card(
             modifier = Modifier.fillMaxWidth()
@@ -45,12 +55,12 @@ fun ProfileScreen() {
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
-                            text = "Jean Dupont",
+                            text = state.user?.username ?: "ZKoders",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "jean.dupont@universite.edu",
+                            text = state.user?.email ?: "z.koders@example.com",
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -63,7 +73,7 @@ fun ProfileScreen() {
                 }
             }
         }
-        
+
         // Informations académiques
         ProfileSection(
             title = "Informations académiques",
@@ -74,7 +84,7 @@ fun ProfileScreen() {
                 ProfileItem("Statut", "Actif")
             )
         )
-        
+
         // Paramètres de sécurité
         ProfileSection(
             title = "Sécurité",
@@ -84,9 +94,9 @@ fun ProfileScreen() {
                 ProfileItem("Historique de connexion", "Voir", Icons.Default.History)
             )
         )
-        
+
         Spacer(modifier = Modifier.weight(1f))
-        
+
         // Bouton de déconnexion
         OutlinedButton(
             onClick = { /* TODO: Déconnexion */ },
@@ -102,65 +112,6 @@ fun ProfileScreen() {
     }
 }
 
-@Composable
-fun ProfileSection(
-    title: String,
-    items: List<ProfileItem>
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
-        ) {
-            Text(
-                text = title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            
-            items.forEach { item ->
-                ProfileItemRow(item = item)
-                if (item != items.last()) {
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProfileItemRow(item: ProfileItem) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            item.icon?.let { icon ->
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-            }
-            Text(
-                text = item.label,
-                fontSize = 16.sp
-            )
-        }
-        Text(
-            text = item.value,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
 
 data class ProfileItem(
     val label: String,
