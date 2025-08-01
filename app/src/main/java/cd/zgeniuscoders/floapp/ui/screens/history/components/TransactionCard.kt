@@ -68,7 +68,7 @@ fun TransactionCard(transaction: History) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = transaction.amount,
+                        text = "${transaction.amount} $",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

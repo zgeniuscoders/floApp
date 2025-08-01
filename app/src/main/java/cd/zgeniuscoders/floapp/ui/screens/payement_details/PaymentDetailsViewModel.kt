@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import cd.zgeniuscoders.floapp.models.History
 import cd.zgeniuscoders.floapp.remote.AuthenticationService
 import cd.zgeniuscoders.floapp.remote.PendingPaimentService
 import cd.zgeniuscoders.floapp.ui.navigation.Screen
@@ -18,6 +19,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +47,8 @@ class PaymentDetailsViewModel @Inject constructor(
                 _state.update { it.copy(selectedPaymentMethod = event.selectedPaymentMethod) }
 
             PaymentDetailsEvent.OnProcessCheckout -> onProcessCheckout()
+            is PaymentDetailsEvent.OnCardNumberChange -> _state.update { it.copy(cardNumber = event.card) }
+            is PaymentDetailsEvent.OnPhoneNumberChange -> _state.update { it.copy(phoneNumber = event.phone) }
         }
     }
 
@@ -89,20 +95,73 @@ class PaymentDetailsViewModel @Inject constructor(
 
                         when (res) {
                             is Response.Error -> {
-                                _state.update { it.copy(error = res.message.toString()) }
+                                _state.update {
+                                    it.copy(
+                                        error = res.message.toString(),
+                                        isProcessing = false,
+                                        isLoading = false
+                                    )
+                                }
                             }
 
                             is Response.Success -> {
-
+                                saveHistory(currentUserUuid)
                             }
                         }
 
-                        _state.update { it.copy(isLoading = false, isProcessing = false) }
 
                     }.launchIn(viewModelScope)
             }
 
         }
+    }
+
+    private fun saveHistory(currentUserUuid: String?) {
+        viewModelScope.launch {
+            val currentDate = LocalDate.now()
+            val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH)
+            val date = currentDate.format(dateFormat)
+
+            val paymentNumber = if (_state.value.selectedPaymentMethod == "card") {
+                _state.value.cardNumber
+            } else {
+                _state.value.phoneNumber
+            }
+
+            val data = History(
+                generateRandomUuid(),
+                paymentMethod = _state.value.selectedPaymentMethod,
+                paymentNumber = paymentNumber,
+                name = _state.value.payment?.title ?: "",
+                amount = _state.value.payment?.amount ?: 0,
+                paidAt = date
+            )
+            pendingPaymentService.saveHistory(currentUserUuid ?: "", data)
+                .onEach { res ->
+                    when (res) {
+                        is Response.Error -> {
+                            _state.update {
+                                it.copy(
+                                    error = res.message.toString(),
+                                    isLoading = false,
+                                    isProcessing = false
+                                )
+                            }
+                        }
+
+                        is Response.Success -> {
+                            _state.update { it.copy(isLoading = false, isProcessing = false) }
+                        }
+                    }
+                }.launchIn(viewModelScope)
+        }
+    }
+
+    fun generateRandomUuid(length: Int = 4): String {
+        val allowCases = "ABCDEFGGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+        return (1..length)
+            .map { allowCases.random() }
+            .joinToString("")
     }
 
 }

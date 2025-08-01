@@ -6,5 +6,6 @@ data class PaymentDetailsState(
     val error: String = "",
     var selectedPaymentMethod: String = "mobile_money",
     var phoneNumber: String = "",
+    var cardNumber: String = "",
     var isProcessing: Boolean = false
 )

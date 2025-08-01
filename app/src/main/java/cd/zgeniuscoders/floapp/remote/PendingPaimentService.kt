@@ -122,6 +122,34 @@ class PendingPaimentService(
             awaitClose()
         }
 
+    fun saveHistory(userId: String, history: History): Flow<Response<Boolean>> =
+        callbackFlow {
+            try {
+                collection
+                    .document(userId)
+                    .collection("histories")
+                    .document(history.id)
+                    .set(history)
+                    .addOnCompleteListener {
+
+                        trySend(
+                            Response.Success(
+                                true
+                            )
+                        )
+
+                    }
+            } catch (e: Exception) {
+                trySend(
+                    Response.Error(
+                        e.message.toString()
+                    )
+                )
+            }
+
+            awaitClose()
+        }
+
     fun getPaymentHistory(userId: String): Flow<Response<List<History>>> = callbackFlow {
         try {
             collection
