@@ -76,27 +76,6 @@ fun DashboardBody(
         }
 
         item {
-            // Statistiques rapides
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "Solde",
-                    value = "75 000 FCFA",
-                    icon = Icons.Default.AccountBalance,
-                    modifier = Modifier.weight(1f)
-                )
-                StatCard(
-                    title = "À payer",
-                    value = "175 000 FCFA",
-                    icon = Icons.Default.Payment,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-
-        item {
             Text(
                 text = "Paiements en attente",
                 fontSize = 20.sp,
