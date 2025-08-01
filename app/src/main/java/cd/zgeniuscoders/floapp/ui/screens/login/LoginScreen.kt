@@ -141,18 +141,6 @@ fun LoginPage(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Authentification biométrique
-            OutlinedButton(
-                onClick = { /* TODO: Implémentation biométrique */ },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(Icons.Default.Fingerprint, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Authentification biométrique")
-            }
-
             Spacer(modifier = Modifier.height(24.dp))
 
             TextButton(onClick = { /* TODO: Mot de passe oublié */ }) {
