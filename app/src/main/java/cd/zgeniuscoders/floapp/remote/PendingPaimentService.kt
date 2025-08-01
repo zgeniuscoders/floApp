@@ -1,6 +1,7 @@
 package cd.zgeniuscoders.floapp.remote
 
 import android.util.Log
+import cd.zgeniuscoders.floapp.models.History
 import cd.zgeniuscoders.floapp.models.PendingPayment
 import cd.zgeniuscoders.floapp.utilis.Response
 import com.google.firebase.firestore.FirebaseFirestore
@@ -120,4 +121,40 @@ class PendingPaimentService(
 
             awaitClose()
         }
+
+    fun getPaymentHistory(userId: String): Flow<Response<List<History>>> = callbackFlow {
+        try {
+            collection
+                .document(userId)
+                .collection("histories")
+                .addSnapshotListener { value, error ->
+
+                    if (error != null) {
+                        trySend(
+                            Response.Error(
+                                message = error.message.toString()
+                            )
+                        )
+                    }
+
+                    if (value != null) {
+                        val paymentPending = value.toObjects(History::class.java)
+                        trySend(
+                            Response.Success(
+                                paymentPending
+                            )
+                        )
+                    }
+
+                }
+        } catch (e: Exception) {
+            trySend(
+                Response.Error(
+                    e.message.toString()
+                )
+            )
+        }
+
+        awaitClose()
+    }
 }
