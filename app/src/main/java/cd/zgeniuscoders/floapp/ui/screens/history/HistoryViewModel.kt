@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.floapp.ui.screens.payments
+package cd.zgeniuscoders.floapp.ui.screens.history
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,19 +15,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PaymentViewModel @Inject constructor(
+class HistoryViewModel @Inject constructor(
     private val pendingPayment: PendingPaimentService,
     private val authenticationService: AuthenticationService
 ) : ViewModel() {
 
-    var state by mutableStateOf(PaymentState())
+    var state by mutableStateOf(HistoryState())
         private set
 
+
     init {
-        getPendingPayments()
+        getHistories()
     }
 
-    private fun getPendingPayments() {
+    fun getHistories() {
         state = state.copy(isLoading = true, errorMessage = "")
 
         val currentUserUuid = authenticationService.getCurrentUserUuid()
@@ -35,7 +36,7 @@ class PaymentViewModel @Inject constructor(
         viewModelScope.launch {
             currentUserUuid?.let {
                 pendingPayment
-                    .getPendingPayment(currentUserUuid)
+                    .getPaymentHistory(currentUserUuid)
                     .onEach { res ->
 
                         state = when (res) {
@@ -46,7 +47,7 @@ class PaymentViewModel @Inject constructor(
                             is Response.Success -> {
                                 state.copy(
                                     isLoading = false,
-                                    pendingPayments = res.data ?: emptyList()
+                                    histories = res.data ?: emptyList()
                                 )
                             }
                         }
