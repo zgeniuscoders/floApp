@@ -53,11 +53,13 @@ fun PendingPaymentCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Button(
-                    onClick = onPayClick,
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text("Payer")
+                if(!payment.paid){
+                    Button(
+                        onClick = onPayClick,
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        Text("Payer")
+                    }
                 }
             }
         }
