@@ -4,6 +4,7 @@ data class History(
     val id: String = "",
     val name: String = "",
     val paymentMethod: String = "",
-    val amount: String = "",
+    val paymentNumber: String = "",
+    val amount: Int = 0,
     val paidAt: String ="",
 )
