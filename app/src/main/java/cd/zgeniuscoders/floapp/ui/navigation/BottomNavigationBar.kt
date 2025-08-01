@@ -10,13 +10,13 @@ import androidx.navigation.NavHostController
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,
-    currentRoute: String?
+    currentRoute: Screen?
 ) {
     val items = listOf(
-        BottomNavItem(Screen.Dashboard.route, "Accueil", Icons.Default.Home),
-        BottomNavItem(Screen.Payments.route, "Paiements", Icons.Default.Payment),
-        BottomNavItem(Screen.History.route, "Historique", Icons.Default.History),
-        BottomNavItem(Screen.Profile.route, "Profil", Icons.Default.Person)
+        BottomNavItem(Screen.Dashboard, "Accueil", Icons.Default.Home),
+        BottomNavItem(Screen.Payments, "Paiements", Icons.Default.Payment),
+        BottomNavItem(Screen.History, "Historique", Icons.Default.History),
+        BottomNavItem(Screen.Profile, "Profil", Icons.Default.Person)
     )
     
     NavigationBar {
@@ -24,7 +24,7 @@ fun BottomNavigationBar(
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = item.title) },
                 label = { Text(item.title) },
-                selected = currentRoute == item.route,
+                selected = currentRoute == item,
                 onClick = {
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId)
@@ -37,7 +37,7 @@ fun BottomNavigationBar(
 }
 
 data class BottomNavItem(
-    val route: String,
+    val route: Screen,
     val title: String,
     val icon: ImageVector
 )
